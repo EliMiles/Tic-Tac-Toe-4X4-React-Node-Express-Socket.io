@@ -1,16 +1,12 @@
 import React, { Component } from 'react'
 
-import AddCommentForm from '../../components/addCommentForm';
-import SearchComment from '../../components/searchComment';
-import CommentDisplay from '../../components/commentDisplay';
+import SocketTest from '../../components/socketTest'
 
 class Main extends Component {
     render() {
         return (
             <div>
-                <AddCommentForm />
-                <SearchComment />
-                <CommentDisplay />
+                <SocketTest />
             </div>
         )
     }
