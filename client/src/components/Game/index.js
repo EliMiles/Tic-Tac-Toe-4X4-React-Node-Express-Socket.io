@@ -9,11 +9,11 @@ class index extends Component {
         this.state = {
             history: [
                 {
-                    squares: Array(9).fill(null)
+                    squares: Array(16).fill(null)
                 }
             ],
             stepNumber: 0,
-            xIsNext: true
+            xIsNext: false
         };
     }
     
