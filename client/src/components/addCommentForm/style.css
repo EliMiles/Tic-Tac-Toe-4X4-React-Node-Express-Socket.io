@@ -1,0 +1,59 @@
+.App_content {
+    margin-left: 25%;
+  }
+  
+  .AddCommentForm_content {
+    margin-top: 5%;
+    margin-right: 40%;
+  }
+  
+  .SearchComment_content {
+    margin-top: 3%;
+    margin-right: 30%;
+  }
+  
+  .CommentDisplay_content {
+    margin-top: 3%;
+    margin-right: 20%;
+    min-width: 451px;
+  }
+  
+  .item {
+    margin-top: 3%;
+    margin-bottom: 3%;
+  }
+  
+  .email {
+    padding-left: 1%;
+    word-wrap: break-word;
+  }
+  
+  .comment {
+    padding-left: 1%;
+    word-wrap: break-word;
+  }
+  
+  .gravatar {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .underGravatar {
+    height: auto;
+  }
+  
+  .commentDisplayContainer {
+    min-width: 451px;
+    margin-bottom: 10%;
+  }
+  
+  .rating {
+    text-align: right;
+  }
+  
+  .ratingNumber {
+    position: relative;
+    top: 2.5px;
+    padding-left: 20%;
+  }
+  
