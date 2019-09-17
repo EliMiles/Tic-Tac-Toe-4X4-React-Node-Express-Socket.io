@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
-
-import SocketTest from '../../components/socketTest'
+import Game from '../../components/Game'
 
 class Main extends Component {
     render() {
         return (
-            <div>
-                <SocketTest />
-            </div>
+            <Game />
         )
     }
 }
