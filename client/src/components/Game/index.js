@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
+import io from 'socket.io-client'
 import Board from '../Board'
 import calculateWinner from './calculateWinner'
 import '../../style.css'
+
+const SERVER_IP = 'http://192.168.1.13';
+const SERVER_PORT = '3231';
+const socketUrl = SERVER_IP + ':' + SERVER_PORT;
 
 class index extends Component {
     constructor(props) {
@@ -13,8 +18,25 @@ class index extends Component {
                 }
             ],
             stepNumber: 0,
-            xIsNext: false
+            xIsNext: false,
+            socket: null,
+            isMyTurn: true
         };
+    }
+
+    componentDidMount(){
+      this.initSocket()
+    }
+
+    initSocket = () => {
+
+      const socket = io(socketUrl);
+
+      socket.on('connect', () => {
+          console.log('Connected');
+      })
+
+      this.setState({socket:socket})
     }
     
     handleClick(i) {
@@ -44,6 +66,7 @@ class index extends Component {
     }
     
     render() {
+
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares);
@@ -72,6 +95,7 @@ class index extends Component {
               <Board
                 squares={current.squares}
                 onClick={i => this.handleClick(i)}
+                isMyTurn={this.state.isMyTurn}
               />
             </div>
             <div className="game-info">

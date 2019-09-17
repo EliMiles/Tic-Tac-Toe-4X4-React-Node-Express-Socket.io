@@ -8,6 +8,7 @@ class index extends Component {
           <Square
             value={this.props.squares[i]}
             onClick={() => this.props.onClick(i)}
+            isMyTurn={this.props.isMyTurn}
           />
         );
     }
