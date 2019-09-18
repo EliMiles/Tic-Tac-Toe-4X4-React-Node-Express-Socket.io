@@ -15,6 +15,24 @@ module.exports = function(client){
 
     console.log('*************************');
 
+    if(io.engine.clients){
+        if(io.engine.clients[client.id].server.clientsCount>1){
+            let count = 0;
+            Object.keys(io.engine.clients).map(function(key, index) {
+                count++;
+
+                if(count>1){
+                    console.log("##########################");
+                    console.log(io.engine.clients[key].id);
+                    console.log("##########################");
+
+                    //io.sockets.connected[io.engine.clients[key].id].emit('changeSecondPlayerToX','for your eyes only');
+                    io.sockets.connected[io.engine.clients[key].id].emit('changeSecondPlayerToX');
+                }
+            });
+        }
+    }
+    
     // recive a call from the client
     client.on('serverFunction', () => {
 
