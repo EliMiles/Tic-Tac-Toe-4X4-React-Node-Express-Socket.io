@@ -28,23 +28,25 @@ class index extends Component {
       this.initSocket()
     }
 
-    // componentDidUpdate(){
-    //   if(this.state.socket){
-
-    //     this.state.socket.on('changeSecondPlayerToX', function () {
-    //       this.setState({xIsNext:true});
-    //     });
-    //   }
-    // }
-
     initSocket = () => {
 
       const socket = io(socketUrl);
 
       socket.on('connect', () => {
-          console.log('Connected');
+        console.log('Connected');
       })
 
+      if(socket){
+
+        socket.on('changeFirstPlayerToO', () => {
+          this.setState({xIsNext:false})
+        })
+
+        socket.on('changeSecondPlayerToX', () => {
+          this.setState({xIsNext:true})
+        })
+      }
+      
       this.setState({socket:socket})
     }
     
@@ -66,56 +68,11 @@ class index extends Component {
         });
     }
 
-    // change_xIsNext_toTrue = () => {
-    //   this.setState({xIsNext:true});
-    // }
-    
-    // jumpTo(step) {
-    //     this.setState({
-    //       stepNumber: step,
-    //       xIsNext: (step % 2) === 0
-    //     });
-    // }
-    
-    // if(this.){
-    //   this.state.socket.on('changeSecondPlayerToX', function () {
-    //     //console.log(data);
-    //     console.log(this.state);
-    //   });
-    // }
-
     render() {
-
-        // if(this.state.socket){
-
-        //   this.state.socket.on('changeSecondPlayerToX', function () {
-        //     //console.log(data);
-        //     this.setState({});
-        //   });
-        // }
 
         const history = this.state.history;
         const current = history[this.state.stepNumber];
-        //const winner = calculateWinner(current.squares);
-    
-        // const moves = history.map((step, move) => {
-        //   const desc = move ?
-        //     'Go to move #' + move :
-        //     'Go to game start';
-        //   return (
-        //     <li key={move}>
-        //       <button onClick={() => this.jumpTo(move)}>{desc}</button>
-        //     </li>
-        //   );
-        // });
-    
-        // let status;
-        // if (winner) {
-        //   status = "Winner: " + winner;
-        // } else {
-        //   status = "Next player: " + (this.state.xIsNext ? "X" : "O");
-        // }
-    
+        
         return (
           <div className="game">
             <div className="game-board">
