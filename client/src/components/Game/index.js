@@ -21,7 +21,7 @@ class index extends Component {
             stepNumber: 0,
             xIsNext: false,
             socket: null,
-            isMyTurn: true
+            isMyTurn: false
         };
     }
 
@@ -34,7 +34,7 @@ class index extends Component {
       const socket = io(socketUrl);
 
       socket.on('connect', () => {
-        console.log('Connected');
+        //console.log('Connected');
       })
 
       if(socket){
@@ -48,7 +48,8 @@ class index extends Component {
               }
             ],
             stepNumber: 0,
-            xIsNext:false
+            xIsNext:false,
+            isMyTurn: true
           })
         })
 
@@ -75,6 +76,14 @@ class index extends Component {
             stepNumber: 0
           })
         })
+
+        socket.on('changeTurnsToAllClients', (lastUpdatedHistory,nextStepNumber) => {
+          this.setState({
+            history:lastUpdatedHistory,
+            stepNumber:nextStepNumber,
+            isMyTurn:this.state.isMyTurn ? false : true
+          })
+        })
       }
       
       this.setState({socket:socket})
@@ -88,18 +97,23 @@ class index extends Component {
           return;
         }
         squares[i] = this.state.xIsNext ? "X" : "O";
+
+        const lastUpdatedHistory = history.concat([
+          {
+            squares: squares
+          }
+        ])
+
         this.setState({
-            history: history.concat([
-                {
-                    squares: squares
-                }
-            ]),
+            history: lastUpdatedHistory,
             stepNumber: history.length
         });
+
+        this.state.socket.emit('changeTurnsRequest',lastUpdatedHistory,this.state.stepNumber);
     }
 
     rematch(state_instance ){
-      console.log('rematch');
+      //console.log('rematch');
       
       if(state_instance){
         state_instance.socket.emit('rematchRequest');

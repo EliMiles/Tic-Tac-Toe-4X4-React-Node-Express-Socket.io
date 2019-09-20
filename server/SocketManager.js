@@ -31,9 +31,13 @@ module.exports = function(client){
     }
 
     client.on('rematchRequest', () => {
-        console.log('rematchRequest');
-
+        //console.log('rematchRequest');
         io.sockets.emit('rematchAllClients'); // send to all of the sockets
+    })
+
+    client.on('changeTurnsRequest', (lastUpdatedHistory,stepNumber) => {
+        //console.log('changeTurnsRequest');
+        io.sockets.emit('changeTurnsToAllClients',lastUpdatedHistory,stepNumber+1); // send to all of the sockets
     })
     
     // when the client is close or refresh
