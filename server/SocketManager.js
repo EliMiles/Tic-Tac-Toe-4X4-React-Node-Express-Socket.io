@@ -39,6 +39,11 @@ module.exports = function(client){
         //console.log('changeTurnsRequest');
         io.sockets.emit('changeTurnsToAllClients',lastUpdatedHistory,stepNumber+1); // send to all of the sockets
     })
+
+    client.on('theEnemyLost', () => {
+        //client.broadcast.emit('clientFunction',(client.id)); // send to all except the socket that starts it
+        client.broadcast.emit('youLostTheGame',(client.id)); // send to all except the socket that starts it
+    })
     
     // when the client is close or refresh
     client.on('disconnect', (reason) => {

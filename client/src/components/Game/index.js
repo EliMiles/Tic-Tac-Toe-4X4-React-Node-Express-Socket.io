@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import io from 'socket.io-client'
 import { Button } from 'react-bootstrap';
 import { GiThink } from "react-icons/gi";
+import { FaRegFrown, FaRegSmile } from "react-icons/fa";
 import Board from '../Board'
 import calculateWinner from './calculateWinner'
 import '../../style.css'
@@ -22,7 +23,9 @@ class index extends Component {
             stepNumber: 0,
             xIsNext: false,
             socket: null,
-            isMyTurn: false
+            isMyTurn: false,
+            iAmAWinner: false,
+            heIsAWinner: false
         };
     }
 
@@ -50,7 +53,9 @@ class index extends Component {
             ],
             stepNumber: 0,
             xIsNext:false,
-            isMyTurn: true
+            isMyTurn: true,
+            iAmAWinner: false,
+            heIsAWinner: false
           })
         })
 
@@ -63,7 +68,9 @@ class index extends Component {
               }
             ],
             stepNumber: 0,
-            xIsNext:true
+            xIsNext:true,
+            iAmAWinner: false,
+            heIsAWinner: false
           })
         })
 
@@ -74,7 +81,9 @@ class index extends Component {
                   squares: Array(16).fill(null)
               }
             ],
-            stepNumber: 0
+            stepNumber: 0,
+            iAmAWinner: false,
+            heIsAWinner: false
           })
         })
 
@@ -83,6 +92,13 @@ class index extends Component {
             history:lastUpdatedHistory,
             stepNumber:nextStepNumber,
             isMyTurn:this.state.isMyTurn ? false : true
+          })
+        })
+
+        socket.on('youLostTheGame', () => {
+          this.setState({
+            iAmAWinner: false,
+            heIsAWinner:true
           })
         })
       }
@@ -94,9 +110,11 @@ class index extends Component {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
-        if (calculateWinner(squares) || squares[i]) { // preventing extra click on used square
+        
+        if ( calculateWinner(squares) || squares[i]) { // preventing extra click on a winner case or on used square case
           return;
         }
+
         squares[i] = this.state.xIsNext ? "X" : "O";
 
         const lastUpdatedHistory = history.concat([
@@ -105,10 +123,24 @@ class index extends Component {
           }
         ])
 
-        this.setState({
+        const winner = calculateWinner(squares);
+
+        if(winner){
+
+          this.state.socket.emit('theEnemyLost');
+
+          this.setState({
+            history: lastUpdatedHistory,
+            stepNumber: history.length,
+            iAmAWinner: true
+          });
+        }
+        else{
+          this.setState({
             history: lastUpdatedHistory,
             stepNumber: history.length
-        });
+          });
+        }
 
         this.state.socket.emit('changeTurnsRequest',lastUpdatedHistory,this.state.stepNumber);
     }
@@ -130,11 +162,17 @@ class index extends Component {
         <div className="game">
           <div className="game-board">
             <div className="player-status-header">
-              <h3 hidden={this.state.isMyTurn}>Please wait...</h3>
-              <h3 hidden={!this.state.isMyTurn}>
+              <h3 hidden={this.state.isMyTurn || this.state.iAmAWinner || this.state.heIsAWinner}>Please wait...</h3>
+              <h3 hidden={!this.state.isMyTurn || this.state.iAmAWinner || this.state.heIsAWinner}>
                 <span hidden={this.state.xIsNext}>O - </span>
                 <span hidden={!this.state.xIsNext}>X - </span>
                 It's your turn ! play wise <GiThink />
+              </h3>
+              <h3 hidden={!this.state.iAmAWinner}>
+                Congratulations<span hidden={this.state.xIsNext}> O </span><span hidden={!this.state.xIsNext}> X </span>you are the winner <FaRegSmile />
+              </h3>
+              <h3 hidden={!this.state.heIsAWinner}>
+                Sorry<span hidden={this.state.xIsNext}> O </span><span hidden={!this.state.xIsNext}> X </span>you are a loser <FaRegFrown />
               </h3>
             </div>
             <Board
