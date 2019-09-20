@@ -41,8 +41,11 @@ module.exports = function(client){
     })
 
     client.on('theEnemyLost', () => {
-        //client.broadcast.emit('clientFunction',(client.id)); // send to all except the socket that starts it
         client.broadcast.emit('youLostTheGame',(client.id)); // send to all except the socket that starts it
+    })
+
+    client.on('itIsATie', () => {
+        client.broadcast.emit('youAreInATie',(client.id)); // send to all except the socket that starts it
     })
     
     // when the client is close or refresh

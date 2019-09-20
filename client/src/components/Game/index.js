@@ -5,6 +5,7 @@ import { GiThink } from "react-icons/gi";
 import { FaRegFrown, FaRegSmile } from "react-icons/fa";
 import Board from '../Board'
 import calculateWinner from './calculateWinner'
+import calculateTie from './calculateTie'
 import '../../style.css'
 
 const SERVER_IP = 'http://192.168.1.13';
@@ -25,7 +26,8 @@ class index extends Component {
             socket: null,
             isMyTurn: false,
             iAmAWinner: false,
-            heIsAWinner: false
+            heIsAWinner: false,
+            isTie:false
         };
     }
 
@@ -55,7 +57,8 @@ class index extends Component {
             xIsNext:false,
             isMyTurn: true,
             iAmAWinner: false,
-            heIsAWinner: false
+            heIsAWinner: false,
+            isTie:false
           })
         })
 
@@ -70,7 +73,8 @@ class index extends Component {
             stepNumber: 0,
             xIsNext:true,
             iAmAWinner: false,
-            heIsAWinner: false
+            heIsAWinner: false,
+            isTie:false
           })
         })
 
@@ -83,7 +87,8 @@ class index extends Component {
             ],
             stepNumber: 0,
             iAmAWinner: false,
-            heIsAWinner: false
+            heIsAWinner: false,
+            isTie:false
           })
         })
 
@@ -98,7 +103,16 @@ class index extends Component {
         socket.on('youLostTheGame', () => {
           this.setState({
             iAmAWinner: false,
-            heIsAWinner:true
+            heIsAWinner:true,
+            isTie:false
+          })
+        })
+
+        socket.on('youAreInATie', () => {
+          this.setState({
+            iAmAWinner: false,
+            heIsAWinner:false,
+            isTie:true
           })
         })
       }
@@ -124,6 +138,7 @@ class index extends Component {
         ])
 
         const winner = calculateWinner(squares);
+        const tie = calculateTie(squares);
 
         if(winner){
 
@@ -132,14 +147,30 @@ class index extends Component {
           this.setState({
             history: lastUpdatedHistory,
             stepNumber: history.length,
-            iAmAWinner: true
+            iAmAWinner: true,
+            heIsAWinner: false,
+            isTie:false
           });
         }
         else{
-          this.setState({
-            history: lastUpdatedHistory,
-            stepNumber: history.length
-          });
+          if(tie){
+
+            this.state.socket.emit('itIsATie');
+
+            this.setState({
+              history: lastUpdatedHistory,
+              stepNumber: history.length,
+              iAmAWinner: false,
+              heIsAWinner: false,
+              isTie:true
+            });
+          }
+          else{
+            this.setState({
+              history: lastUpdatedHistory,
+              stepNumber: history.length
+            });
+          }
         }
 
         this.state.socket.emit('changeTurnsRequest',lastUpdatedHistory,this.state.stepNumber);
@@ -162,18 +193,19 @@ class index extends Component {
         <div className="game">
           <div className="game-board">
             <div className="player-status-header">
-              <h3 hidden={this.state.isMyTurn || this.state.iAmAWinner || this.state.heIsAWinner}>Please wait...</h3>
-              <h3 hidden={!this.state.isMyTurn || this.state.iAmAWinner || this.state.heIsAWinner}>
+              <h3 hidden={this.state.isMyTurn || this.state.iAmAWinner || this.state.heIsAWinner || this.state.isTie}>Please wait...</h3>
+              <h3 hidden={!this.state.isMyTurn || this.state.iAmAWinner || this.state.heIsAWinner || this.state.isTie}>
                 <span hidden={this.state.xIsNext}>O - </span>
                 <span hidden={!this.state.xIsNext}>X - </span>
                 It's your turn ! play wise <GiThink />
               </h3>
-              <h3 hidden={!this.state.iAmAWinner}>
+              <h3 hidden={!this.state.iAmAWinner || this.state.isTie}>
                 Congratulations<span hidden={this.state.xIsNext}> O </span><span hidden={!this.state.xIsNext}> X </span>you are the winner <FaRegSmile />
               </h3>
-              <h3 hidden={!this.state.heIsAWinner}>
+              <h3 hidden={!this.state.heIsAWinner || this.state.isTie}>
                 Sorry<span hidden={this.state.xIsNext}> O </span><span hidden={!this.state.xIsNext}> X </span>you are a loser <FaRegFrown />
               </h3>
+              <h3 hidden={!this.state.isTie || this.state.iAmAWinner || this.state.heIsAWinner}>It is a tie!</h3>
             </div>
             <Board
               squares={current.squares}
