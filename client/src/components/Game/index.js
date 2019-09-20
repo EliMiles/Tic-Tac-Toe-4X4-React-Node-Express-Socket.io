@@ -177,7 +177,6 @@ class index extends Component {
     }
 
     rematch(state_instance ){
-      //console.log('rematch');
       
       if(state_instance){
         state_instance.socket.emit('rematchRequest');
