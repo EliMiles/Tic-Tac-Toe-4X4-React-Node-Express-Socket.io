@@ -52,3 +52,7 @@ body {
   .rematchButton {
     padding-top: 10%;
   }
+
+  .player-status-header {
+    padding-bottom: 10px;
+  }

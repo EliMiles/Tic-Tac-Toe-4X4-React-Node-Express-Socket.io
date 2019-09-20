@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import io from 'socket.io-client'
 import { Button } from 'react-bootstrap';
+import { GiThink } from "react-icons/gi";
 import Board from '../Board'
 import calculateWinner from './calculateWinner'
 import '../../style.css'
@@ -128,6 +129,14 @@ class index extends Component {
       return (
         <div className="game">
           <div className="game-board">
+            <div className="player-status-header">
+              <h3 hidden={this.state.isMyTurn}>Please wait...</h3>
+              <h3 hidden={!this.state.isMyTurn}>
+                <span hidden={this.state.xIsNext}>O - </span>
+                <span hidden={!this.state.xIsNext}>X - </span>
+                It's your turn ! play wise <GiThink />
+              </h3>
+            </div>
             <Board
               squares={current.squares}
               onClick={i => this.handleClick(i)}
