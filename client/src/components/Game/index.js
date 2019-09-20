@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import io from 'socket.io-client'
+import { Button } from 'react-bootstrap';
 import Board from '../Board'
 import calculateWinner from './calculateWinner'
 import '../../style.css'
@@ -39,11 +40,40 @@ class index extends Component {
       if(socket){
 
         socket.on('changeFirstPlayerToO', () => {
-          this.setState({xIsNext:false})
+
+          this.setState({
+            history: [
+              {
+                  squares: Array(16).fill(null)
+              }
+            ],
+            stepNumber: 0,
+            xIsNext:false
+          })
         })
 
         socket.on('changeSecondPlayerToX', () => {
-          this.setState({xIsNext:true})
+
+          this.setState({
+            history: [
+              {
+                  squares: Array(16).fill(null)
+              }
+            ],
+            stepNumber: 0,
+            xIsNext:true
+          })
+        })
+
+        socket.on('rematchAllClients', () => {
+          this.setState({
+            history: [
+              {
+                  squares: Array(16).fill(null)
+              }
+            ],
+            stepNumber: 0
+          })
         })
       }
       
@@ -68,22 +98,33 @@ class index extends Component {
         });
     }
 
+    rematch(state_instance ){
+      console.log('rematch');
+      
+      if(state_instance){
+        state_instance.socket.emit('rematchRequest');
+      }
+    }
+
     render() {
 
-        const history = this.state.history;
-        const current = history[this.state.stepNumber];
-        
-        return (
-          <div className="game">
-            <div className="game-board">
-              <Board
-                squares={current.squares}
-                onClick={i => this.handleClick(i)}
-                isMyTurn={this.state.isMyTurn}
-              />
+      const history = this.state.history;
+      const current = history[this.state.stepNumber];
+
+      return (
+        <div className="game">
+          <div className="game-board">
+            <Board
+              squares={current.squares}
+              onClick={i => this.handleClick(i)}
+              isMyTurn={this.state.isMyTurn}
+            />
+            <div className="rematchButton">
+              <Button variant="primary" onClick={() => this.rematch(this.state)}>Rematch</Button>
             </div>
           </div>
-        );
+        </div>
+      );
     }
 }
 

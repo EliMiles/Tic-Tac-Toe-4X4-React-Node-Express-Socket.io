@@ -20,35 +20,22 @@ module.exports = function(client){
             Object.keys(io.engine.clients).map(function(key, index) {
 
                 if(index === 0){
-
-                    //io.sockets.connected[io.engine.clients[key].id].emit('changeSecondPlayerToX','for your eyes only');
                     io.sockets.connected[io.engine.clients[key].id].emit('changeFirstPlayerToO');
                 }
                 
                 if(index === 1){
-                    
-                    //io.sockets.connected[io.engine.clients[key].id].emit('changeSecondPlayerToX','for your eyes only');
                     io.sockets.connected[io.engine.clients[key].id].emit('changeSecondPlayerToX');
                 }
             });
         }
     }
+
+    client.on('rematchRequest', () => {
+        console.log('rematchRequest');
+
+        io.sockets.emit('rematchAllClients'); // send to all of the sockets
+    })
     
-    // recive a call from the client
-    // client.on('serverFunction', () => {
-
-    //     console.log('Button press of : ' + client.id + ' ' + client.handshake.address + ' ' + client.handshake.headers.origin)
-
-    //     Object.keys(io.engine.clients).map(function(key, index) {
-            
-    //         if(io.engine.clients[key].remoteAddress === client.handshake.address){
-    //             if(io.engine.clients[key].id !== client.id){
-    //                 io.sockets.connected[io.engine.clients[key].id].emit('clientFunction', 'for your eyes only');
-    //             }
-    //         }
-    //     });
-    // });
-
     // when the client is close or refresh
     client.on('disconnect', (reason) => {
         // Some logic - for future use
