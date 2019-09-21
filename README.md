@@ -3,14 +3,14 @@
 ### Server
 1. In a new terminal - go to server directory (cd server)
 
-2. Enter : npm install (in ths first time only)
+2. Enter : npm install (only in the first time)
 
 3. Enter : npm run dev
 
 ### Client
 1. In a new terminal - go to client directory (cd client) 
 
-2. Enter : npm install (in ths first time only)
+2. Enter : npm install (only in the first time)
 
 3. Enter : npm run start
 
