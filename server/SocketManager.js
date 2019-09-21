@@ -2,18 +2,17 @@ const io = require('./index.js').io
 
 module.exports = function(client){
 
+    console.log('*************************');
+
     Object.keys(io.engine.clients).map(function(key, index) {
 
         let clientObj = {
             id: io.engine.clients[key].id,
-            origin: io.engine.clients[key].request.headers.origin,
-            ip: io.engine.clients[key].remoteAddress
+            origin: io.engine.clients[key].request.headers.origin
         }
 
         console.log(clientObj);
     });
-
-    console.log('*************************');
 
     if(io.engine.clients){
         if(io.engine.clients[client.id].server.clientsCount>1){
@@ -49,17 +48,16 @@ module.exports = function(client){
     // when the client is close or refresh
     client.on('disconnect', (reason) => {
         
-        // Object.keys(io.engine.clients).map(function(key, index) {
+        console.log('*************************');
 
-        //     let clientObj = {
-        //         id: io.engine.clients[key].id,
-        //         origin: io.engine.clients[key].request.headers.origin,
-        //         ip: io.engine.clients[key].remoteAddress
-        //     }
-    
-        //     console.log(clientObj);
-        // });
+        Object.keys(io.engine.clients).map(function(key, index) {
 
-        // console.log('*************************');
+            let clientObj = {
+                id: io.engine.clients[key].id,
+                origin: io.engine.clients[key].request.headers.origin
+            }
+
+            console.log(clientObj);
+        });
     });
 }

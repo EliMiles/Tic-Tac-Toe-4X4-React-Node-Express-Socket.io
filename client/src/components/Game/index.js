@@ -8,7 +8,7 @@ import calculateWinner from './calculateWinner'
 import calculateTie from './calculateTie'
 import '../../style.css'
 
-const SERVER_IP = 'http://192.168.1.13';
+const SERVER_IP = 'http://localhost';
 const SERVER_PORT = '3231';
 const socketUrl = SERVER_IP + ':' + SERVER_PORT;
 
