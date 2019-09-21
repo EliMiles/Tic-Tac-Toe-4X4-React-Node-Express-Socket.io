@@ -1,4 +1,4 @@
-# Tic-Tac-Toe-4X4
+# Tic-Tac-Toe-4X4-React-Node-Express-Socket.io
 
 ### Server
 1. Go to the server directory and write in the terminal :
