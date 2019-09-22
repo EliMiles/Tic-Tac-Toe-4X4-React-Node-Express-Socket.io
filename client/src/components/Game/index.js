@@ -138,8 +138,7 @@ class index extends Component {
         ])
 
         const winner = calculateWinner(squares);
-        const tie = calculateTie(squares);
-
+        
         if(winner){
 
           this.state.socket.emit('theEnemyLost');
@@ -153,6 +152,7 @@ class index extends Component {
           });
         }
         else{
+          const tie = calculateTie(squares);
           if(tie){
 
             this.state.socket.emit('itIsATie');
